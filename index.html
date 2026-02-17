@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Ramazon 2026 — Nukus | Saharlik & Iftorlik</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet"/>
+    <style>
+        :root {
+            --primary: #b8860b;       /* oltin sarlavha */
+            --dark: #0f172a;          /* fon */
+            --card-bg: #1e293b;       /* kartalar foni */
+            --text-light: #e0e7ff;    /* matn */
+            --accent: #2d5a3e;        /* yashil aksent */
+            --gradient: linear-gradient(135deg, #1e293b, #0f172a);
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: var(--gradient);
+            color: var(--text-light);
+            min-height: 100vh;
+            background-attachment: fixed;
+        }
+        header {
+            text-align: center;
+            padding: 2.5rem 1rem 1.5rem;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(8px);
+        }
+        h1 {
+            font-size: 2.8rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            text-shadow: 0 4px 10px rgba(184,134,11,0.4);
+        }
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        .today-card {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: rgba(30,41,59,0.7);
+            border-radius: 20px;
+            border: 1px solid rgba(184,134,11,0.2);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            text-align: center;
+        }
+        .today-card h2 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            font-size: 2.2rem;
+        }
+        .times-row {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-bottom: 2.5rem;
+            flex-wrap: wrap;
+        }
+        .time-block {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: #fff;
+            min-width: 220px;
+        }
+        .duas-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            justify-content: center;
+        }
+        .dua-block {
+            flex: 1;
+            min-width: 300px;
+            max-width: 45%;
+            padding: 1.5rem;
+            background: var(--card-bg);
+            border-radius: 16px;
+            border: 1px solid rgba(184,134,11,0.2);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        }
+        .dua-title {
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .translit {
+            font-style: italic;
+            color: #e0d4b0;
+            margin: 0.8rem 0;
+            font-size: 1.15rem;
+            line-height: 1.6;
+        }
+        .meaning {
+            color: #d1d5db;
+            font-size: 1.05rem;
+            line-height: 1.5;
+        }
+        @media (max-width: 768px) {
+            .dua-block { max-width: 100%; }
+            .times-row { gap: 1.5rem; flex-direction: column; }
+            .time-block { font-size: 1.8rem; }
+            .today-card { margin: 1rem; padding: 1.5rem; }
+        }
+        table {
+            width: 90%;
+            max-width: 900px;
+            margin: 2rem auto;
+            border-collapse: separate;
+            border-spacing: 0 10px;
+        }
+        th, td {
+            padding: 1.2rem;
+            text-align: center;
+            background: rgba(30,41,59,0.6);
+            border-radius: 10px;
+        }
+        th {
+            background: rgba(184,134,11,0.15);
+            color: var(--primary);
+            font-weight: 600;
+        }
+        tr:hover td {
+            background: rgba(184,134,11,0.12);
+        }
+        .today-row {
+            background: rgba(184,134,11,0.25) !important;
+            box-shadow: 0 0 15px rgba(184,134,11,0.3);
+        }
+        footer {
+            text-align: center;
+            padding: 2rem;
+            opacity: 0.7;
+            font-size: 0.95rem;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Ramazon 2026</h1>
+    <p class="subtitle">Nukus shahri — saharlik va iftorlik vaqtlari (Hanafiy mazhabi)</p>
+</header>
+
+<div class="today-card" id="todayCard">
+    <!-- JavaScript orqali to'ldiriladi -->
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>Kun</th>
+            <th>Sana</th>
+            <th>Saharlik (Imsak)</th>
+            <th>Iftorlik (Mag‘rib)</th>
+        </tr>
+    </thead>
+    <tbody id="timetable"></tbody>
+</table>
+
+<footer>
+    Ma’lumotlar taxminiy (Hanafiy mazhabi bo'yicha). Aniqlik uchun mahalliy masjidga murojaat qiling.<br>
+    Sayt ochiq bo‘lsa, iftorlikdan 30 daqiqa oldin brauzer xabarnomasi keladi (ruxsat bering).
+</footer>
+
+<script>
+    const times = [
+        {day:1, date:"19 Feb 2026", sahur:"06:33", iftar:"18:42"},
+        {day:2, date:"20 Feb 2026", sahur:"06:31", iftar:"18:44"},
+        {day:3, date:"21 Feb 2026", sahur:"06:30", iftar:"18:45"},
+        {day:4, date:"22 Feb 2026", sahur:"06:29", iftar:"18:46"},
+        {day:5, date:"23 Feb 2026", sahur:"06:27", iftar:"18:47"},
+        {day:6, date:"24 Feb 2026", sahur:"06:26", iftar:"18:49"},
+        {day:7, date:"25 Feb 2026", sahur:"06:24", iftar:"18:50"},
+        {day:8, date:"26 Feb 2026", sahur:"06:23", iftar:"18:51"},
+        {day:9, date:"27 Feb 2026", sahur:"06:21", iftar:"18:52"},
+        {day:10,date:"28 Feb 2026", sahur:"06:20", iftar:"18:54"},
+        {day:11,date:"01 Feb 2026", sahur:"06:18", iftar:"18:55"},
+        {day:12,date:"02 Mar 2026", sahur:"06:16", iftar:"18:56"},
+        {day:13,date:"03 Mar 2026", sahur:"06:15", iftar:"18:57"},
+        {day:14,date:"04 Mar 2026", sahur:"06:13", iftar:"18:59"},
+        {day:15,date:"05 Mar 2026", sahur:"06:12", iftar:"19:00"},
+        {day:16,date:"06 Mar 2026", sahur:"06:10", iftar:"19:01"},
+        {day:17,date:"07 Mar 2026", sahur:"06:08", iftar:"19:02"},
+        {day:18,date:"08 Mar 2026", sahur:"06:07", iftar:"19:03"},
+        {day:19,date:"09 Mar 2026", sahur:"06:05", iftar:"19:05"},
+        {day:20,date:"10 Mar 2026", sahur:"06:03", iftar:"19:06"},
+        {day:21,date:"11 Mar 2026", sahur:"06:01", iftar:"19:07"},
+        {day:22,date:"12 Mar 2026", sahur:"06:00", iftar:"19:08"},
+        {day:23,date:"13 Mar 2026", sahur:"05:58", iftar:"19:09"},
+        {day:24,date:"14 Mar 2026", sahur:"05:56", iftar:"19:10"},
+        {day:25,date:"15 Mar 2026", sahur:"05:54", iftar:"19:12"},
+        {day:26,date:"16 Mar 2026", sahur:"05:53", iftar:"19:13"},
+        {day:27,date:"17 Mar 2026", sahur:"05:51", iftar:"19:14"},
+        {day:28,date:"18 Mar 2026", sahur:"05:49", iftar:"19:15"},
+        {day:29,date:"19 Mar 2026", sahur:"05:47", iftar:"19:16"},
+        {day:30,date:"20 Mar 2026", sahur:"05:45", iftar:"19:17"}
+    ];
+
+    const tbody = document.getElementById("timetable");
+    const todayCard = document.getElementById("todayCard");
+    const now = new Date();
+    const currentMonth = now.getMonth(); // 1 = February
+    const currentDate = now.getDate();
+
+    let todayData = null;
+    let currentDayIndex = -1;
+
+    if (currentMonth === 1 && currentDate >= 18 && currentDate <= 19) {
+        currentDayIndex = currentDate - 18;
+        if (currentDayIndex >= 0 && currentDayIndex < times.length) {
+            todayData = times[currentDayIndex];
+        }
+    }
+
+    // Jadval to'ldirish
+    times.forEach((item, index) => {
+        const row = document.createElement("tr");
+        if (index === currentDayIndex) row.classList.add("today-row");
+        row.innerHTML = `
+            <td>${item.day}</td>
+            <td>${item.date}</td>
+            <td>${item.sahur} AM</td>
+            <td>${item.iftar}</td>
+        `;
+        tbody.appendChild(row);
+    });
+
+    // Bugungi karta (duolar yonma-yon, pastda)
+    if (todayData) {
+        todayCard.innerHTML = `
+            <h2>Bugun: ${todayData.date} — ${todayData.day}-kun</h2>
+            <div class="times-row">
+                <div class="time-block">Saharlik (Imsak): ${todayData.sahur} AM</div>
+                <div class="time-block">Iftorlik (Mag‘rib): ${todayData.iftar}</div>
+            </div>
+            
+            <div class="duas-container">
+                <div class="dua-block">
+                    <span class="dua-title">Saharlik (niyat) duosi</span>
+                    <div class="translit">
+                        Navaytu an asuma sovma shahri ramazona minal-fajri ilal-mag‘ribi, xolisan lillahi ta‘ala. Allohu akbar.
+                    </div>
+                    <div class="meaning">
+                        Ma’nosi: Ramazon oyining ro‘zasini tong otganidan kun botguncha xolis Alloh taolo uchun tutmoqni niyat qildim. Alloh buyukdir.
+                    </div>
+                </div>
+                
+                <div class="dua-block">
+                    <span class="dua-title">Iftorlik duosi</span>
+                    <div class="translit">
+                        Allohumma laka sumtu va bika aamantu va ‘alayka tavakkaltu va ‘alaa rizqika aftartu. Fag‘fir lii maa qoddamtu va maa axxortu birohmatika yaa arhamar-roohimiyn.
+                    </div>
+                    <div class="meaning">
+                        Ma’nosi: Ey Alloh! Sen uchun ro‘za tutdim, Senga iymon keltirdim, Senga tavakkal qildim va Sen bergan rizqing bilan iftor qildim. Oldingi va keyingi gunohlarimni rahmatlaring bilan mag‘firat qil, ey rahmat qiluvchilarning eng mehriboni!
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Notification (agar hozir iftorlikka 30 daqiqa qolgan bo'lsa)
+        if ("Notification" in window) {
+            Notification.requestPermission().then(perm => {
+                if (perm === "granted") {
+                    const [h, m] = todayData.iftar.split(":").map(Number);
+                    const iftarDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m, 0);
+                    const notifyTime = new Date(iftarDate.getTime() - 30 * 60 * 1000);
+                    if (now >= notifyTime && now < iftarDate) {
+                        new Notification("Iftorlikka 30 daqiqa qoldi!", {
+                            body: `Vaqt: ${todayData.iftar}. Tayyorlaning! 🌙`,
+                            icon: "https://img.icons8.com/emoji/96/000000/crescent-moon.png"
+                        });
+                    }
+                }
+            });
+        }
+    } else {
+        todayCard.innerHTML = `
+            <div class="duas-container">
+                <div class="dua-block">
+                    <span class="dua-title">Saharlik duosi</span>
+                    <div class="translit">
+                        Navaytu an asuma sovma shahri ramazona minal-fajri ilal-mag‘ribi, xolisan lillahi ta‘ala. Allohu akbar.
+                    </div>
+                    <div class="meaning">
+                        Ma’nosi: Ramazon ro‘zasini fajrdan mag‘ribgacha xolis Alloh uchun tutmoqni niyat qildim. Alloh buyukdir.
+                    </div>
+                </div>
+                
+                <div class="dua-block">
+                    <span class="dua-title">Iftorlik duosi</span>
+                    <div class="translit">
+                        Allohumma laka sumtu va bika aamantu va ‘alayka tavakkaltu va ‘alaa rizqika aftartu. Fag‘fir lii maa qoddamtu va maa axxortu birohmatika yaa arhamar-roohimiyn.
+                    </div>
+                    <div class="meaning">
+                        Ma’nosi: Ey Alloh, Sen uchun ro‘za tutdim, Senga iymon keltirdim, Senga tavakkal qildim va Sen bergan rizq bilan iftor qildim. Oldingi va keyingi gunohlarimni rahmatlaring bilan mag‘firat qil, ey rahmat qiluvchilarning eng mehriboni!
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+</script>
+</body>
+</html>
